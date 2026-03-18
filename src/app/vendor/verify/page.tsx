@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { PencilLine } from "lucide-react";
 
 
-export default function VerifyPage() {
+function VerifyForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email") || "user@example.com";
@@ -127,5 +127,13 @@ export default function VerifyPage() {
         </a>
       </div>
     </div>
+  );
+}
+
+export default function VerifyPage() {
+  return (
+    <Suspense fallback={<div className="w-full max-w-md mx-auto text-center py-12">Loading...</div>}>
+      <VerifyForm />
+    </Suspense>
   );
 }
