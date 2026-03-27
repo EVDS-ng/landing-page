@@ -43,19 +43,25 @@ export default function Navbar() {
               </Link>
             ))}
           </div>
-          
+
           <div className="flex items-center gap-4">
-            <Link href="/how-it-works" className="bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-2 rounded-full transition-colors text-sm shadow-sm">
-              Download app
+            <Link
+              href="/waitlist"
+              className="bg-[#072147] hover:bg-[#0a2d5e] text-white font-semibold px-6 py-2 rounded-full transition-colors text-sm shadow-sm"
+            >
+              Join waitlist
             </Link>
-            <Link href="/vendors" className="bg-red-50 text-red-500 font-semibold px-6 py-2 rounded-full transition-colors text-sm">
+            <Link
+              href="/vendors"
+              className="bg-red-50 text-red-500 font-semibold px-6 py-2 rounded-full transition-colors text-sm"
+            >
               Vendor registration
             </Link>
           </div>
         </div>
 
         {/* Mobile Menu Toggle */}
-        <button 
+        <button
           className="md:hidden p-2 text-gray-600"
           onClick={() => setIsOpen(!isOpen)}
         >
@@ -77,10 +83,18 @@ export default function Navbar() {
             </Link>
           ))}
           <div className="flex flex-col gap-3 mt-4">
-            <Link href="/how-it-works" className="w-full text-center bg-red-500 hover:bg-red-600 text-white font-semibold py-3 rounded-full transition-colors">
-              Download app
+            <Link
+              href="/waitlist"
+              onClick={() => setIsOpen(false)}
+              className="w-full text-center bg-[#072147] hover:bg-[#0a2d5e] text-white font-semibold py-3 rounded-full transition-colors"
+            >
+              Join waitlist
             </Link>
-            <Link href="/vendors" className="w-full text-center text-red-500 font-semibold py-3 border border-red-500 rounded-full transition-colors">
+            <Link
+              href="/vendors"
+              onClick={() => setIsOpen(false)}
+              className="w-full text-center text-red-500 font-semibold py-3 border border-red-500 rounded-full transition-colors"
+            >
               Vendor registration
             </Link>
           </div>

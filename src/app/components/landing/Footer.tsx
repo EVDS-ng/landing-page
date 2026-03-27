@@ -6,6 +6,7 @@ export default function Footer() {
   const footerLinks = {
     COMPANY: [
       { name: "Home", href: "/" },
+      { name: "Join Waitlist", href: "/waitlist" },
       { name: "Contact", href: "/contact" },
       { name: "FAQs", href: "/faqs" },
       { name: "Terms and Privacy", href: "/terms-privacy" },
@@ -15,9 +16,7 @@ export default function Footer() {
       { name: "Packages", href: "/how-it-works" },
       { name: "FAQs", href: "/faqs" },
     ],
-    VENDOR: [
-      { name: "Registration", href: "/vendors" },
-    ]
+    VENDOR: [{ name: "Registration", href: "/vendors" }],
   };
 
   return (
@@ -38,16 +37,28 @@ export default function Footer() {
             Plan, contribute & celebrate.
           </p>
           <div className="flex gap-4 items-center text-red-500">
-            <Link href="#" className="p-2 border border-red-100 rounded-full hover:bg-red-50 transition-colors">
+            <Link
+              href="#"
+              className="p-2 border border-red-100 rounded-full hover:bg-red-50 transition-colors"
+            >
               <Instagram size={20} />
             </Link>
-            <Link href="#" className="p-2 border border-red-100 rounded-full hover:bg-red-50 transition-colors">
+            <Link
+              href="#"
+              className="p-2 border border-red-100 rounded-full hover:bg-red-50 transition-colors"
+            >
               <Twitter size={20} />
             </Link>
-            <Link href="#" className="p-2 border border-red-100 rounded-full hover:bg-red-50 transition-colors">
+            <Link
+              href="#"
+              className="p-2 border border-red-100 rounded-full hover:bg-red-50 transition-colors"
+            >
               <Linkedin size={20} />
             </Link>
-            <Link href="#" className="p-2 border border-red-100 rounded-full hover:bg-red-50 transition-colors">
+            <Link
+              href="#"
+              className="p-2 border border-red-100 rounded-full hover:bg-red-50 transition-colors"
+            >
               <Youtube size={20} />
             </Link>
           </div>
@@ -59,8 +70,8 @@ export default function Footer() {
             <div key={title} className="flex flex-col gap-4">
               <h4 className="font-bold text-gray-900 mb-2">{title}</h4>
               {links.map((link) => (
-                <Link 
-                  key={link.name} 
+                <Link
+                  key={link.name}
                   href={link.href}
                   className="text-gray-600 hover:text-red-500 text-sm font-medium transition-colors"
                 >
@@ -74,7 +85,7 @@ export default function Footer() {
 
       {/* Full width bottom image */}
       <div className="w-full h-48 md:h-[400px] relative mt-auto">
-        <Image 
+        <Image
           src="/images/home-page/footer-banner-image.png"
           alt="Group of friends celebrating"
           fill
