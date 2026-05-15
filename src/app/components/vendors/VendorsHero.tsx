@@ -21,7 +21,7 @@ export default function VendorsHero() {
         
         <div className="mt-4">
           <Link 
-            href="/contact" 
+            href="/vendor/register" 
             className="inline-block bg-red-500 hover:bg-red-600 text-white font-semibold px-8 py-4 rounded-full transition-colors shadow-sm"
           >
             Become a vendor

@@ -12,7 +12,7 @@ export default function VendorLayout({
       {/* Left side image area */}
       <div className="hidden lg:flex lg:w-1/2 relative">
         <Image
-          src="/images/cake-cutting.jpg"
+          src="/images/vendor-registration.png"
           alt="Vendor background"
           fill
           className="object-cover"

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
 
 export default function GrowBusinessSection() {
@@ -40,9 +41,9 @@ export default function GrowBusinessSection() {
           </ul>
           
           <div>
-            <button className="bg-red-500 hover:bg-red-600 text-white font-bold py-4 px-8 rounded-full transition-colors shadow-lg hover:shadow-xl hover:-translate-y-1 transform">
+            <Link href="/vendor/register" className="bg-red-500 hover:bg-red-600 text-white font-bold py-4 px-8 rounded-full transition-colors shadow-lg hover:shadow-xl hover:-translate-y-1 transform inline-block">
               Become a vendor
-            </button>
+            </Link>
           </div>
         </div>
       </div>

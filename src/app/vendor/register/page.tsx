@@ -5,26 +5,58 @@ import { Eye, EyeOff, Check, X, ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+const API = process.env.NEXT_PUBLIC_API_URL;
 
 export default function RegisterPage() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     businessName: "",
     email: "",
     password: "",
   });
 
-  // Password validation checks
   const hasLowercase = /[a-z]/.test(formData.password);
   const hasUppercase = /[A-Z]/.test(formData.password);
   const hasNumber = /[0-9]/.test(formData.password);
   const hasLength = formData.password.length >= 8;
+  const passwordValid = hasLowercase && hasUppercase && hasNumber && hasLength;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (hasLowercase && hasUppercase && hasNumber && hasLength) {
+    if (!passwordValid) return;
+
+    setLoading(true);
+    setError("");
+
+    try {
+      const res = await fetch(`${API}/vendor/auth/preflight`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: formData.email,
+          business_name: formData.businessName,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.message || "Something went wrong. Please try again.");
+        return;
+      }
+
+      // Store password in sessionStorage so verify page can complete registration
+      sessionStorage.setItem("vendor_reg_password", formData.password);
+      sessionStorage.setItem("vendor_reg_business", formData.businessName);
+
       router.push(`/vendor/verify?email=${encodeURIComponent(formData.email)}`);
+    } catch {
+      setError("Network error. Please check your connection and try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -49,6 +81,12 @@ export default function RegisterPage() {
       <p className="text-gray-500 text-sm mb-8">
         Start your journey as an Everyday Surprises vendor today.
       </p>
+
+      {error && (
+        <div className="mb-4 px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm font-medium">
+          {error}
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-1.5">
@@ -102,31 +140,41 @@ export default function RegisterPage() {
           </div>
         </div>
 
-        {/* Password requirements */}
         <div className="flex flex-wrap gap-2 pt-2 pb-4">
-          <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium ${hasLowercase ? 'bg-light-blue-50 text-secondary-blue' : 'bg-red-50 text-secondary-red'}`}>
-            {hasLowercase ? <Check size={14} strokeWidth={3} /> : <X size={14} strokeWidth={3} />}
-            1 lowercase letter
-          </div>
-          <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium ${hasUppercase ? 'bg-light-blue-50 text-secondary-blue' : 'bg-red-50 text-secondary-red'}`}>
-            {hasUppercase ? <Check size={14} strokeWidth={3} /> : <X size={14} strokeWidth={3} />}
-            1 uppercase letter
-          </div>
-          <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium ${hasNumber ? 'bg-light-blue-50 text-secondary-blue' : 'bg-red-50 text-secondary-red'}`}>
-            {hasNumber ? <Check size={14} strokeWidth={3} /> : <X size={14} strokeWidth={3} />}
-            1 number
-          </div>
-          <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium ${hasLength ? 'bg-light-blue-50 text-secondary-blue' : 'bg-red-50 text-secondary-red'}`}>
-            {hasLength ? <Check size={14} strokeWidth={3} /> : <X size={14} strokeWidth={3} />}
-            8 characters
-          </div>
+          {[
+            { ok: hasLowercase, label: "1 lowercase letter" },
+            { ok: hasUppercase, label: "1 uppercase letter" },
+            { ok: hasNumber, label: "1 number" },
+            { ok: hasLength, label: "8 characters" },
+          ].map(({ ok, label }) => (
+            <div
+              key={label}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium ${
+                ok ? "bg-light-blue-50 text-secondary-blue" : "bg-red-50 text-secondary-red"
+              }`}
+            >
+              {ok ? <Check size={14} strokeWidth={3} /> : <X size={14} strokeWidth={3} />}
+              {label}
+            </div>
+          ))}
         </div>
 
         <button
           type="submit"
-          className="w-full bg-secondary-red hover:bg-red-600 text-white font-semibold py-3.5 rounded-full transition-colors flex items-center justify-center gap-2 shadow-sm"
+          disabled={!passwordValid || loading}
+          className="w-full bg-secondary-red hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3.5 rounded-full transition-colors flex items-center justify-center gap-2 shadow-sm"
         >
-          Continue to step 2 <span className="text-lg leading-none">→</span>
+          {loading ? (
+            <span className="flex items-center gap-2">
+              <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+              </svg>
+              Sending OTP...
+            </span>
+          ) : (
+            <>Continue to step 2 <span className="text-lg leading-none">→</span></>
+          )}
         </button>
       </form>
 

@@ -34,7 +34,7 @@ export default function VendorsSteps() {
           </h2>
           
           <Link 
-            href="/contact" 
+            href="/vendor/register" 
             className="inline-block mt-2 bg-red-500 hover:bg-red-600 text-white font-semibold px-8 py-3.5 rounded-full transition-colors shadow-sm"
           >
             Become a vendor
