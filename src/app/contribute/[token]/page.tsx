@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { LogOut, Calendar, Clock, MapPin, Shield, Clock4, Users } from "lucide-react";
+import { LogOut, Calendar, Clock, Shield, Clock4, Users } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 
@@ -95,8 +95,8 @@ export default function ContributePage() {
           const cxData = await cxRes.json();
           setContributions(cxData.data || []);
         }
-      } catch (e: any) {
-        setError(e.message || "Could not load this event.");
+      } catch (e: unknown) {
+        setError(e instanceof Error ? e.message : "Could not load this event.");
       } finally {
         setLoading(false);
       }
@@ -139,8 +139,8 @@ export default function ContributePage() {
       if (!res.ok) throw new Error(data.message || "Payment initialization failed");
       // Redirect to Paystack checkout
       window.location.href = data.data?.authorization_url || data.data?.data?.authorization_url;
-    } catch (e: any) {
-      setFormError(e.message || "Something went wrong. Please try again.");
+    } catch (e: unknown) {
+      setFormError(e instanceof Error ? e.message : "Something went wrong. Please try again.");
       setSubmitting(false);
     }
   }

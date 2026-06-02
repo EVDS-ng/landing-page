@@ -11,7 +11,7 @@ const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/v1";
 interface TxResult {
   amount: number;
   reference: string;
-  celebrant_name?: string;
+  celebrant_name?: string | null;
   status: string;
 }
 
@@ -43,16 +43,16 @@ export default function ContributionSuccessPage() {
           body: JSON.stringify({ reference }),
         });
         const data = await res.json();
-        if (!res.ok) throw new Error(data.message || "Verification failed");
-        const d = data.data;
+        if (!res.ok) throw new Error((data.message as string) || "Verification failed");
+        const d = data.data as { amount?: number; reference?: string; status?: string; metadata?: { celebrant_name?: string }; celebrant_name?: string };
         setTx({
           amount: d.amount ?? 0,
           reference: d.reference ?? reference!,
           celebrant_name: d.metadata?.celebrant_name ?? d.celebrant_name ?? null,
           status: d.status ?? "success",
         });
-      } catch (e: any) {
-        setError(e.message || "Could not verify payment.");
+      } catch (e: unknown) {
+        setError(e instanceof Error ? e.message : "Could not verify payment.");
       } finally {
         setLoading(false);
       }
