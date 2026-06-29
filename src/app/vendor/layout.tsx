@@ -36,6 +36,19 @@ export default function VendorLayout({
 
       {/* Right side content area */}
       <div className="w-full lg:w-1/2 flex flex-col relative overflow-y-auto min-h-screen">
+        {/* Top left logo — visible only when left panel is hidden (mobile/tablet) */}
+        <div className="absolute top-6 left-6 z-10 lg:hidden">
+          <Link href="/">
+            <Image
+              src="/images/Logo.png"
+              alt="Everyday Surprises Logo"
+              width={160}
+              height={54}
+              className="h-9 w-auto object-contain"
+            />
+          </Link>
+        </div>
+
         {/* Top right button */}
         <div className="absolute top-8 right-8 z-10 sm:block">
           <Link
