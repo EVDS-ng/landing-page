@@ -119,7 +119,7 @@ export default function ContributePage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setFormError(null);
-    if (!name.trim()) return setFormError("Name is required");
+    if (!isAnonymous && !name.trim()) return setFormError("Name is required");
     if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return setFormError("A valid email is required");
     if (!amount || amount < 100) return setFormError("Minimum contribution is ₦100");
 
@@ -131,7 +131,7 @@ export default function ContributePage() {
         body: JSON.stringify({
           amount,
           contributor_name: isAnonymous ? "Anonymous" : name.trim(),
-          contributor_email: email.trim().toLowerCase(),
+          contributor_email: email.trim(),
           ...(message.trim() && { message: message.trim() }),
         }),
       });
