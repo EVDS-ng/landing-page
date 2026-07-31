@@ -6,7 +6,7 @@ import { LogOut, Calendar, Clock, Shield, Clock4, Users } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 
-const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/v1";
+const API = process.env.NEXT_PUBLIC_API_URL;
 
 interface EventInfo {
   public_id: string;
@@ -210,7 +210,12 @@ export default function ContributePage() {
         <div className="flex flex-col items-center mt-10 mb-8 text-center px-4">
           <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border-4 border-white shadow-md mb-4 bg-gray-100 flex items-center justify-center">
             {event.cover_photo ? (
-              <img src={event.cover_photo} alt={event.celebrant_name} className="w-full h-full object-cover" />
+              <img
+                src={event.cover_photo.replace(/^http:\/\//, 'https://')}
+                alt={event.celebrant_name}
+                className="w-full h-full object-cover"
+                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+              />
             ) : (
               <span className="text-4xl">🎉</span>
             )}

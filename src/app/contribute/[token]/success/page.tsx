@@ -6,7 +6,7 @@ import { LogOut, Check } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { useParams, useSearchParams, useRouter } from "next/navigation";
 
-const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/v1";
+const API = process.env.NEXT_PUBLIC_API_URL;
 
 interface TxResult {
   amount: number;

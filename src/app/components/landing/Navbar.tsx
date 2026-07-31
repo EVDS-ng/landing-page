@@ -3,10 +3,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
 
   const navLinks = [
     { name: "Home", href: "/" },
@@ -37,7 +39,11 @@ export default function Navbar() {
               <Link
                 key={link.name}
                 href={link.href}
-                className="text-gray-600 hover:text-red-500 font-medium text-sm transition-colors"
+                className={`font-medium text-sm transition-colors ${
+                  pathname === link.href
+                    ? "text-secondary-red font-semibold"
+                    : "text-gray-600 hover:text-secondary-red"
+                }`}
               >
                 {link.name}
               </Link>
@@ -76,7 +82,11 @@ export default function Navbar() {
             <Link
               key={link.name}
               href={link.href}
-              className="text-gray-700 hover:text-red-500 font-medium py-2 border-b border-gray-50"
+              className={`font-medium py-2 border-b border-gray-50 transition-colors ${
+                pathname === link.href
+                  ? "text-secondary-red font-semibold"
+                  : "text-gray-700 hover:text-secondary-red"
+              }`}
               onClick={() => setIsOpen(false)}
             >
               {link.name}

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   CheckCircle,
   XCircle,
@@ -86,11 +86,9 @@ function SuccessModal({ onClose }: { onClose: () => void }) {
 function ErrorModal({
   message,
   onClose,
-  onRetry,
 }: {
   message: string;
   onClose: () => void;
-  onRetry: () => void;
 }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -116,28 +114,17 @@ function ErrorModal({
           <XCircle className="text-red-500 w-10 h-10" strokeWidth={1.5} />
         </div>
 
-        <h3 className="text-2xl font-bold text-gray-900 mb-2">
-          Something went wrong
-        </h3>
-        <p className="text-gray-500 leading-relaxed mb-8">
+        <p className="text-gray-700 font-semibold leading-relaxed mb-8">
           {message ||
             "We couldn't add you to the waitlist right now. Please try again."}
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-3 w-full">
-          <button
-            onClick={onClose}
-            className="flex-1 border border-gray-200 text-gray-600 hover:bg-gray-50 font-semibold py-3.5 rounded-2xl transition-colors"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={onRetry}
-            className="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold py-3.5 rounded-2xl transition-colors shadow-lg"
-          >
-            Try again
-          </button>
-        </div>
+        <button
+          onClick={onClose}
+          className="w-full border border-gray-200 text-gray-600 hover:bg-gray-50 font-semibold py-3.5 rounded-2xl transition-colors"
+        >
+          Close
+        </button>
       </div>
     </div>
   );
@@ -256,8 +243,7 @@ export default function WaitlistPage() {
       newErrors.email = "Please enter a valid email address.";
     }
 
-    const phoneRegex = /^\+?[0-9\s\-().]{7,20}$/;
-    if (!formData.phone.trim() || !phoneRegex.test(formData.phone)) {
+    if (!formData.phone.trim() || formData.phone.replace(/\D/g, "").length < 7) {
       newErrors.phone = "Please enter a valid phone number.";
     }
 
@@ -273,15 +259,22 @@ export default function WaitlistPage() {
     }
   };
 
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.value.replace(/\D/g, "");
+    const sanitized = raw.startsWith("0") ? raw.slice(1) : raw;
+    setFormData((prev) => ({ ...prev, phone: sanitized.slice(0, 10) }));
+    if (errors.phone) setErrors((prev) => ({ ...prev, phone: undefined }));
+  };
+
   const submitToWaitlist = async () => {
     setLoading(true);
     try {
-      const res = await fetch("https://api.everydaysurprises.com/v1/waitlist", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/waitlist`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: formData.email.trim(),
-          phone: formData.phone.trim(),
+          phone: formData.phone ? `+234${formData.phone}` : "",
           full_name: formData.full_name.trim(),
         }),
       });
@@ -316,11 +309,6 @@ export default function WaitlistPage() {
     await submitToWaitlist();
   };
 
-  const handleRetry = () => {
-    setModal({ type: null });
-    submitToWaitlist();
-  };
-
   const stats = [
     { icon: Users, label: "Early sign-ups", value: "2,400+" },
     { icon: Gift, label: "Surprise categories", value: "50+" },
@@ -335,6 +323,10 @@ export default function WaitlistPage() {
           to   { opacity: 1; transform: scale(1)   translateY(0); }
         }
         .animate-modal-in { animation: modal-in 0.25s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50%       { transform: translateY(-20px); }
+        }
       `}</style>
 
       {/* Modals */}
@@ -345,7 +337,6 @@ export default function WaitlistPage() {
         <ErrorModal
           message={modal.message || ""}
           onClose={() => setModal({ type: null })}
-          onRetry={handleRetry}
         />
       )}
 
@@ -536,20 +527,29 @@ export default function WaitlistPage() {
                 >
                   Phone number <span className="text-red-500">*</span>
                 </label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  placeholder="+234 801 234 5678"
-                  autoComplete="tel"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  className={`w-full border rounded-2xl px-4 py-3.5 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 transition-all text-sm ${
+                <div
+                  className={`flex items-center border rounded-2xl overflow-hidden transition-all focus-within:ring-2 ${
                     errors.phone
-                      ? "border-red-400 focus:ring-red-200"
-                      : "border-gray-200 focus:ring-[#072147]/20 focus:border-[#072147]"
+                      ? "border-red-400 focus-within:ring-red-200"
+                      : "border-gray-200 focus-within:ring-[#072147]/20 focus-within:border-[#072147]"
                   }`}
-                />
+                >
+                  <div className="flex items-center gap-2 px-3.5 py-3.5 bg-gray-50 border-r border-gray-200 shrink-0 select-none">
+                    <span className="text-lg leading-none">🇳🇬</span>
+                    <span className="text-sm font-semibold text-gray-600">+234</span>
+                  </div>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    inputMode="numeric"
+                    placeholder="801 234 5678"
+                    autoComplete="tel-national"
+                    value={formData.phone}
+                    onChange={handlePhoneChange}
+                    className="flex-1 px-3.5 py-3.5 text-gray-900 placeholder:text-gray-400 focus:outline-none text-sm bg-transparent"
+                  />
+                </div>
                 {errors.phone && (
                   <p className="text-red-500 text-xs mt-0.5">{errors.phone}</p>
                 )}
