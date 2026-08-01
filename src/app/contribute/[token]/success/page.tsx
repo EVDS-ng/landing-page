@@ -5,8 +5,9 @@ import Link from "next/link";
 import { LogOut, Check } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { useParams, useSearchParams, useRouter } from "next/navigation";
+import { API_BASE } from "@/lib/api";
 
-const API = process.env.NEXT_PUBLIC_API_URL;
+const API = API_BASE;
 
 interface TxResult {
   amount: number;

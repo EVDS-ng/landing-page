@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import {
   CheckCircle,
   XCircle,
@@ -15,6 +15,7 @@ import {
   Users,
   Clock,
 } from "lucide-react";
+import { API_BASE } from "@/lib/api";
 
 interface FormData {
   full_name: string;
@@ -269,7 +270,7 @@ export default function WaitlistPage() {
   const submitToWaitlist = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/waitlist`, {
+      const res = await fetch(`${API_BASE}/waitlist`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

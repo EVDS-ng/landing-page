@@ -4,8 +4,9 @@ import { useState } from "react";
 import { Eye, EyeOff, Check, X, ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { API_BASE } from "@/lib/api";
 
-const API = process.env.NEXT_PUBLIC_API_URL;
+const API = API_BASE;
 
 export default function RegisterPage() {
   const router = useRouter();

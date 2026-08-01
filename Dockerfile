@@ -2,12 +2,13 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 COPY package.json package-lock.json ./
-RUN npm ci --include=optional
+RUN npm ci
 
 COPY . .
 
-# NEXT_PUBLIC_ vars are baked into the bundle at build time — must be passed as build args
-ARG NEXT_PUBLIC_API_URL
+# NEXT_PUBLIC_* is inlined at build time. Default protects against missing build-arg;
+# Railway should still pass NEXT_PUBLIC_API_URL via railway.json buildArgs.
+ARG NEXT_PUBLIC_API_URL=https://api.everydaysurprises.com/v1
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 
 RUN npm run build

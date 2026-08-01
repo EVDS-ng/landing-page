@@ -1,0 +1,9 @@
+.next
+node_modules
+.env*.local
+.git
+.gitignore
+*.md
+.DS_Store
+tsconfig.tsbuildinfo
+.eslintrc.json

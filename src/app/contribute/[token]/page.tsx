@@ -5,8 +5,9 @@ import Link from "next/link";
 import { LogOut, Calendar, Clock, Shield, Clock4, Users } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { API_BASE } from "@/lib/api";
 
-const API = process.env.NEXT_PUBLIC_API_URL;
+const API = API_BASE;
 
 interface EventInfo {
   public_id: string;
@@ -96,7 +97,13 @@ export default function ContributePage() {
           setContributions(cxData.data || []);
         }
       } catch (e: unknown) {
-        setError(e instanceof Error ? e.message : "Could not load this event.");
+        const msg = e instanceof Error ? e.message : "Could not load this event.";
+        // Safari/WebKit surfaces CORS/network failures as "Load failed"
+        setError(
+          msg === "Load failed" || msg === "Failed to fetch"
+            ? "Could not reach the server. Please check your connection and try again."
+            : msg
+        );
       } finally {
         setLoading(false);
       }
