@@ -14,8 +14,9 @@ COPY . .
 ARG NEXT_PUBLIC_API_URL=https://api.everydaysurprises.com/v1
 ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
 ENV NEXT_TELEMETRY_DISABLED=1
-
-RUN npm run build
+# Bust Railway remote cache when we intentionally ship a new client bundle
+ARG CACHE_BUST=1
+RUN echo "cache_bust=${CACHE_BUST}" && npm run build
 
 # ── run ───────────────────────────────────────────────────────────────────────
 FROM node:20-alpine AS runner
