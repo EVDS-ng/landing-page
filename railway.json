@@ -4,13 +4,13 @@
     "builder": "DOCKERFILE",
     "dockerfilePath": "Dockerfile",
     "buildArgs": {
-      "NEXT_PUBLIC_API_URL": "${{NEXT_PUBLIC_API_URL}}"
+      "NEXT_PUBLIC_API_URL": "https://api.everydaysurprises.com/v1"
     }
   },
   "deploy": {
-    "startCommand": "node server.js",
     "restartPolicyType": "ON_FAILURE",
-    "restartPolicyMaxRetries": 3
+    "restartPolicyMaxRetries": 3,
+    "healthcheckPath": "/",
+    "healthcheckTimeout": 100
   }
 }
-
