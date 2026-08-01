@@ -8,7 +8,7 @@ import "./globals.css";
 const commission = localFont({
   src: [
     {
-      path: "../../public/fonts/Commissioner-VariableFont_wght (1).ttf",
+      path: "../../public/fonts/Commissioner-VariableFont_wght.ttf",
       style: "normal",
     },
   ],
